@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rà Mắt CMB — Bảng điều khiển</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="components.css" />
+    <link rel="stylesheet" href="background.css" />
+    <link rel="stylesheet" href="controller-mobile.css" />
+    <link rel="stylesheet" href="topbar.css" />
+    <link rel="stylesheet" href="screen-one-layout.css" />
+    <link rel="stylesheet" href="orb-design.css" />
+    <link rel="stylesheet" href="orb-reference.css" />
+    <link rel="stylesheet" href="countdown-design.css" />
+    <link rel="stylesheet" href="countdown-ready.css" />
+    <link rel="stylesheet" href="type-spacing.css" />
+    <link rel="stylesheet" href="showcase-design.css" />
+    <link rel="stylesheet" href="showcase-transition.css" />
+    <link rel="stylesheet" href="showcase-button.css" />
+  </head>
+  <body>
+    <main class="console">
+      <aside class="sidebar">
+        <div class="brand"><span class="brand-mark">CMB</span><span>EVENT<br>CONTROL</span></div>
+        <nav>
+          <a class="active" href="#control"><i>◉</i> Điều khiển</a>
+          <a href="#preview"><i>▣</i> Xem trước</a>
+          <a href="#guide"><i>?</i> Hướng dẫn</a>
+        </nav>
+        <div class="connection"><span></span><div><b>Đã kết nối</b><small>Màn hình chính</small></div></div>
+      </aside>
+
+      <section class="workspace" id="control">
+        <header>
+          <div><p class="eyebrow">SỰ KIỆN RÀ MẮT ỨNG DỤNG</p><h1>Bảng điều khiển</h1></div>
+          <button class="display-btn" id="openDisplay"><span>↗</span> Mở màn hình lớn</button>
+        </header>
+
+        <section class="state-section">
+          <div class="section-title"><div><p class="eyebrow">01 / TRẠNG THÁI HIỂN THỊ</p><h2>Chọn kịch bản trình chiếu</h2></div><span class="live-pill"><i></i> LIVE</span></div>
+          <div class="state-cards">
+            <button class="state-card active" data-state="1"><span class="card-number">01</span><span class="state-icon hands">◉</span><b>Cùng chạm,<br>cùng kết nối</b><small>Nhân vật đặt tay lên điểm chạm</small></button>
+            <button class="state-card" data-state="2"><span class="card-number">02</span><span class="state-icon timer">10</span><b>Đếm ngược<br>ra mắt</b><small>Bộ đếm 10 giây ấn tượng</small></button>
+            <button class="state-card" data-state="3"><span class="card-number">03</span><span class="state-icon apps">▦</span><b>Hệ sinh thái<br>ứng dụng</b><small>Giới thiệu MH2, MH3 và MH4</small></button>
+          </div>
+        </section>
+
+        <section class="interaction-panel">
+          <div class="panel-heading"><div><p class="eyebrow">02 / TƯƠNG TÁC ĐIỂM CHẠM</p><h2>Kích hoạt hiệu ứng vòng tròn</h2><p class="hint">Chọn điểm tương ứng khi người tham gia đã đặt tay lên màn hình.</p></div><button class="reset" id="resetAll">↻ Đặt lại</button></div>
+          <div class="touch-controls" id="touchControls"></div>
+        </section>
+
+        <section class="preview-section" id="preview"><div class="preview-heading"><div><p class="eyebrow">XEM TRƯỚC TRỰC TIẾP</p><h2>Màn hình lớn</h2></div><span id="stateLabel">TRẠNG THÁI 01</span></div><div class="mini-display" id="miniDisplay"></div></section>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,62 +1,40 @@
 <!doctype html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rà Mắt CMB — Bảng điều khiển</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="components.css" />
-    <link rel="stylesheet" href="background.css" />
-    <link rel="stylesheet" href="controller-mobile.css" />
-    <link rel="stylesheet" href="topbar.css" />
-    <link rel="stylesheet" href="screen-one-layout.css" />
-    <link rel="stylesheet" href="orb-design.css" />
-    <link rel="stylesheet" href="orb-reference.css" />
-    <link rel="stylesheet" href="countdown-design.css" />
-    <link rel="stylesheet" href="countdown-ready.css" />
-    <link rel="stylesheet" href="type-spacing.css" />
-    <link rel="stylesheet" href="showcase-design.css" />
-    <link rel="stylesheet" href="showcase-transition.css" />
-    <link rel="stylesheet" href="showcase-button.css" />
-  </head>
-  <body>
-    <main class="console">
-      <aside class="sidebar">
-        <div class="brand"><span class="brand-mark">CMB</span><span>EVENT<br>CONTROL</span></div>
-        <nav>
-          <a class="active" href="#control"><i>◉</i> Điều khiển</a>
-          <a href="#preview"><i>▣</i> Xem trước</a>
-          <a href="#guide"><i>?</i> Hướng dẫn</a>
-        </nav>
-        <div class="connection"><span></span><div><b>Đã kết nối</b><small>Màn hình chính</small></div></div>
-      </aside>
-
-      <section class="workspace" id="control">
-        <header>
-          <div><p class="eyebrow">SỰ KIỆN RÀ MẮT ỨNG DỤNG</p><h1>Bảng điều khiển</h1></div>
-          <button class="display-btn" id="openDisplay"><span>↗</span> Mở màn hình lớn</button>
-        </header>
-
-        <section class="state-section">
-          <div class="section-title"><div><p class="eyebrow">01 / TRẠNG THÁI HIỂN THỊ</p><h2>Chọn kịch bản trình chiếu</h2></div><span class="live-pill"><i></i> LIVE</span></div>
-          <div class="state-cards">
-            <button class="state-card active" data-state="1"><span class="card-number">01</span><span class="state-icon hands">◉</span><b>Cùng chạm,<br>cùng kết nối</b><small>Nhân vật đặt tay lên điểm chạm</small></button>
-            <button class="state-card" data-state="2"><span class="card-number">02</span><span class="state-icon timer">10</span><b>Đếm ngược<br>ra mắt</b><small>Bộ đếm 10 giây ấn tượng</small></button>
-            <button class="state-card" data-state="3"><span class="card-number">03</span><span class="state-icon apps">▦</span><b>Hệ sinh thái<br>ứng dụng</b><small>Giới thiệu MH2, MH3 và MH4</small></button>
-          </div>
-        </section>
-
-        <section class="interaction-panel">
-          <div class="panel-heading"><div><p class="eyebrow">02 / TƯƠNG TÁC ĐIỂM CHẠM</p><h2>Kích hoạt hiệu ứng vòng tròn</h2><p class="hint">Chọn điểm tương ứng khi người tham gia đã đặt tay lên màn hình.</p></div><button class="reset" id="resetAll">↻ Đặt lại</button></div>
-          <div class="touch-controls" id="touchControls"></div>
-        </section>
-
-        <section class="preview-section" id="preview"><div class="preview-heading"><div><p class="eyebrow">XEM TRƯỚC TRỰC TIẾP</p><h2>Màn hình lớn</h2></div><span id="stateLabel">TRẠNG THÁI 01</span></div><div class="mini-display" id="miniDisplay"></div></section>
-      </section>
-    </main>
-    <script src="app.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>CMB — Màn hình lớn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="background.css">
+  <link rel="stylesheet" href="orb-design.css">
+  <link rel="stylesheet" href="orb-reference.css">
+  <link rel="stylesheet" href="countdown-design.css">
+  <link rel="stylesheet" href="countdown-ready.css">
+  <link rel="stylesheet" href="type-spacing.css">
+  <link rel="stylesheet" href="showcase-design.css">
+  <link rel="stylesheet" href="showcase-transition.css">
+  <style>.full-display{height:100vh;width:100vw;overflow:hidden;background:#031342}</style>
+</head>
+<body>
+  <div id="display" class="full-display"></div>
+  <script>
+    const c=new BroadcastChannel('cmb-event-control'),d=document.getElementById('display');
+    const orb=(active)=>`<div class="display-orb ${active?'spinning':''}"><svg class="orb-svg" viewBox="0 0 200 200" aria-hidden="true"><g class="orbit-track"><circle class="outer-glow" cx="100" cy="100" r="84"/><circle class="outer-solid" cx="100" cy="100" r="84"/><circle class="dash-ring" cx="100" cy="100" r="91"/><circle class="arc" cx="100" cy="100" r="76"/><circle class="inner-ring" cx="100" cy="100" r="63"/><circle class="inner-halo" cx="100" cy="100" r="56"/><circle class="node" cx="100" cy="8" r="4"/><circle class="node" cx="192" cy="100" r="4"/><circle class="node" cx="100" cy="192" r="4"/><circle class="node" cx="8" cy="100" r="4"/></g></svg><span class="orb-label">CMB</span></div>`;
+    const slides=[{title:'HỆ SINH THÁI ỨNG DỤNG QUẢN TRỊ',image:'MH2.png',label:'01 / 03'},{title:'WEBSITE MỚI',image:'MH4.png',label:'02 / 03'},{title:'ỨNG DỤNG DI ĐỘNG',image:'MH3.png',label:'03 / 03'}];
+    function showcase(index){const slide=slides[index]||slides[0],dots=slides.map((_,i)=>'<i class="'+(i===index?'active':'')+'"></i>').join('');return '<div class="screen app-showcase"><div class="showcase-copy"><p>'+slide.label+'</p><h3>'+slide.title+'</h3></div><div class="product-frame"><img src="'+slide.image+'" alt="'+slide.title+'"></div><div class="showcase-progress">'+dots+'</div></div>'}
+    function m(s,a=[],n=10,showcaseIndex=0){
+      if(s===3)return showcase(showcaseIndex);
+      if(s===2)return `<div class="screen count-screen">${n>0?`<img class="count-image" src="${n}.png" alt="Đếm ngược ${n}">`:`<div class="count-ready">SẴN SÀNG RA MẮT</div>`}</div>`;
+      return `<div class="screen tech-scene"><div class="screen-bg"></div><div class="circuit-board"></div><div class="world-map"></div><div class="city-line"></div><div class="digital-wave"></div><div class="floor-grid"></div><div class="display-top">
+        <div class="display-title">RA MẮT</div><div class="display-subtitle">HỆ THỐNG ỨNG DỤNG QUẢN TRỊ · ỨNG DỤNG DI ĐỘNG · WEBSITE MỚI</div></div><div class="touch-link"></div><div class="orb-row">${Array.from({length:7},(_,i)=>orb(a.includes(i+1))).join('')}</div></div>`;
+    }
+    function mount(html,smooth){const old=d.querySelector('.app-showcase');if(!smooth||!old){d.innerHTML=html;return}const holder=document.createElement('div');holder.innerHTML=html;const next=holder.firstElementChild;next.classList.add('showcase-enter');old.classList.add('showcase-exit');d.appendChild(next);setTimeout(()=>old.remove(),720)}
+    c.onmessage=e=>{if(e.data?.type==='state'){let p=e.data.payload;mount(m(p.state,p.activeOrbs,p.count,p.showcase),p.state===3)}};
+    c.postMessage({type:'request-state'});
+  </script>
+</body>
 </html>
