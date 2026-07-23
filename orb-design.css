@@ -1,0 +1,11 @@
+/* Multi-ring neon touch points */
+.orb-row{left:7%!important;right:7%!important;gap:clamp(24px,4.8vw,92px)}
+.display-orb{width:clamp(58px,9.2vw,145px)!important;background:radial-gradient(circle at 50% 44%,#123dc8 0 15%,#061a67 16% 54%,#040d4e 55%)!important;border:2px solid #2de8ff!important;box-shadow:inset 0 0 20px #0c5fff,0 0 10px #12dfff,0 0 22px rgba(12,114,255,.75)!important;position:relative;isolation:isolate;flex:none}
+.display-orb:before{content:"";position:absolute;inset:-17%;border-radius:50%;padding:3px;background:repeating-conic-gradient(from 5deg,#71f4ff 0deg 4deg,transparent 5deg 20deg,#1684ff 21deg 25deg,transparent 26deg 39deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;filter:drop-shadow(0 0 4px #13e9ff);z-index:-1}
+.display-orb:after{content:"";position:absolute;inset:8%;border:2px solid rgba(85,235,255,.95);border-radius:50%;box-shadow:inset 0 0 10px #0989f7,0 0 6px #1bdbff;z-index:-1}
+.display-orb span{position:relative;z-index:2;text-shadow:0 0 8px #8cf4ff}
+.display-orb.spinning{animation:none!important;box-shadow:inset 0 0 27px #19cfff,0 0 15px #27f4ff,0 0 38px #137aff!important}
+.display-orb.spinning:before{animation:orbit-spin 1.8s linear infinite;filter:drop-shadow(0 0 7px #4cffff)}
+.display-orb.spinning:after{animation:orbit-pulse .8s ease-in-out infinite alternate;border-color:#d5ffff}
+@keyframes orbit-spin{to{transform:rotate(360deg)}}@keyframes orbit-pulse{to{transform:scale(1.04);box-shadow:inset 0 0 18px #20e7ff,0 0 18px #51f8ff}}
+@media(max-width:700px){.orb-row{gap:clamp(12px,3vw,26px)}.display-orb{width:clamp(39px,11vw,65px)!important}}

@@ -1,0 +1,2 @@
+.state-card-single{margin-top:20px}.state-card-single .state-card{width:100%;min-height:170px}.state-1-panel{margin-top:22px;margin-bottom:22px}.state-cards{margin-top:0;grid-template-columns:repeat(2,1fr)}
+@media(max-width:700px){.state-card-single{margin-top:25px}.state-card-single .state-card{min-height:238px}.state-1-panel{margin-top:20px;margin-bottom:20px}.state-cards{grid-template-columns:1fr;gap:20px}}
