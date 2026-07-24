@@ -24,15 +24,15 @@ if (stateCardsContainer && firstStateCard && interactionPanel) {
 if (stateCardsContainer) {
   const showcaseControls = document.createElement('div');
   showcaseControls.className = 'showcase-controls';
-  showcaseControls.innerHTML = '<h3>03 / NỘI DUNG TRÌNH CHIẾU</h3><div class="showcase-thumbs"><button class="showcase-thumb" data-showcase="0"><img src="MH2.png" alt="Ứng dụng quản trị"><span>Ứng dụng quản trị</span></button><button class="showcase-thumb" data-showcase="1"><img src="MH4.png" alt="Website mới"><span>Website mới</span></button><button class="showcase-thumb" data-showcase="2"><img src="MH3.png" alt="Ứng dụng di động"><span>Ứng dụng di động</span></button></div>';
+  showcaseControls.innerHTML = '<h3>03 / NỘI DUNG TRÌNH CHIẾU</h3><div class="showcase-thumbs"><button class="showcase-thumb" data-showcase="0"><img src="erp.png" alt="Ứng dụng quản trị"><span>Ứng dụng quản trị</span></button><button class="showcase-thumb" data-showcase="1"><img src="website.png" alt="Website mới"><span>Website mới</span></button><button class="showcase-thumb" data-showcase="2"><img src="mobile.png" alt="Ứng dụng di động"><span>Ứng dụng di động</span></button></div>';
   stateCardsContainer.appendChild(showcaseControls);
 }
 document.querySelector('.state-card[data-state="3"] small').textContent = 'Ứng dụng quản trị · Website mới · Ứng dụng di động';
 
 const showcaseSlides = [
-  { title: 'HỆ SINH THÁI ỨNG DỤNG QUẢN TRỊ', image: 'MH2.png', label: '01 / 03' },
-  { title: 'WEBSITE MỚI', image: 'MH4.png', label: '02 / 03' },
-  { title: 'ỨNG DỤNG DI ĐỘNG', image: 'MH3.png', label: '03 / 03' }
+  { title: 'HỆ SINH THÁI ỨNG DỤNG QUẢN TRỊ', image: 'website.png', label: 'ERP' },
+  { title: 'WEBSITE MỚI', image: 'website.png', label: 'Website' },
+  { title: 'ỨNG DỤNG DI ĐỘNG', image: 'mobile.png', label: 'Mobile' }
 ];
 function showcaseMarkup(index) {
   const slide = showcaseSlides[index] || showcaseSlides[0];

@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="count-scene.css">
   <link rel="stylesheet" href="showcase-clean.css">
   <link rel="stylesheet" href="showcase-stack.css">
+  <link rel="stylesheet" href="simple-font.css">
   <style>.full-display{height:100vh;width:100vw;overflow:hidden;background:#031342}</style>
 </head>
 <body>
@@ -30,7 +31,7 @@
   <script>
     const c=new BroadcastChannel('cmb-event-control'),d=document.getElementById('display');
     const orb=(active)=>`<div class="display-orb ${active?'spinning':''}"><svg class="orb-svg" viewBox="0 0 200 200" aria-hidden="true"><g class="orbit-track"><circle class="outer-glow" cx="100" cy="100" r="84"/><circle class="outer-solid" cx="100" cy="100" r="84"/><circle class="dash-ring" cx="100" cy="100" r="91"/><circle class="arc" cx="100" cy="100" r="76"/><circle class="inner-ring" cx="100" cy="100" r="63"/><circle class="inner-halo" cx="100" cy="100" r="56"/><circle class="node" cx="100" cy="8" r="4"/><circle class="node" cx="192" cy="100" r="4"/><circle class="node" cx="100" cy="192" r="4"/><circle class="node" cx="8" cy="100" r="4"/></g></svg><span class="orb-label">CMB</span></div>`;
-    const slides=[{title:'HỆ SINH THÁI ỨNG DỤNG QUẢN TRỊ',image:'MH2.png',label:'01 / 03'},{title:'WEBSITE MỚI',image:'MH4.png',label:'02 / 03'},{title:'ỨNG DỤNG DI ĐỘNG',image:'MH3.png',label:'03 / 03'}];
+    const slides=[{title:'HỆ SINH THÁI ỨNG DỤNG QUẢN TRỊ',image:'erp.png',label:''},{title:'WEBSITE MỚI',image:'website.png',label:''},{title:'ỨNG DỤNG DI ĐỘNG',image:'mobile.png',label:''}];
     function showcase(index){const slide=slides[index]||slides[0],dots=slides.map((_,i)=>'<i class="'+(i===index?'active':'')+'"></i>').join('');return '<div class="screen app-showcase"><div class="showcase-copy"><p>'+slide.label+'</p><h3>'+slide.title+'</h3></div><div class="product-frame"><img src="'+slide.image+'" alt="'+slide.title+'"></div><div class="showcase-progress">'+dots+'</div></div>'}
     function countdownScene(n){const counter=n>0?'<div class="count-overlay"><b>'+n+'</b></div>':'<div class="count-overlay ready"><b>SẴN SÀNG RA MẮT</b></div>';return '<div class="screen tech-scene count-tech-scene"><div class="screen-bg"></div>'+counter+'<div class="touch-link"></div><div class="orb-row">'+Array.from({length:7},(_,i)=>orb(true)).join('')+'</div></div>'}
     function m(s,a=[],n=10,showcaseIndex=0){
