@@ -21,6 +21,8 @@
 </head>
 <body>
   <div id="display" class="full-display"></div>
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script src="socket-client.js"></script>
   <script>
     const c=new BroadcastChannel('cmb-event-control'),d=document.getElementById('display');
     const orb=(active)=>`<div class="display-orb ${active?'spinning':''}"><svg class="orb-svg" viewBox="0 0 200 200" aria-hidden="true"><g class="orbit-track"><circle class="outer-glow" cx="100" cy="100" r="84"/><circle class="outer-solid" cx="100" cy="100" r="84"/><circle class="dash-ring" cx="100" cy="100" r="91"/><circle class="arc" cx="100" cy="100" r="76"/><circle class="inner-ring" cx="100" cy="100" r="63"/><circle class="inner-halo" cx="100" cy="100" r="56"/><circle class="node" cx="100" cy="8" r="4"/><circle class="node" cx="192" cy="100" r="4"/><circle class="node" cx="100" cy="192" r="4"/><circle class="node" cx="8" cy="100" r="4"/></g></svg><span class="orb-label">CMB</span></div>`;
@@ -34,6 +36,7 @@
     }
     function mount(html,smooth){const old=d.querySelector('.app-showcase');if(!smooth||!old){d.innerHTML=html;return}const holder=document.createElement('div');holder.innerHTML=html;const next=holder.firstElementChild;next.classList.add('showcase-enter');old.classList.add('showcase-exit');d.appendChild(next);setTimeout(()=>old.remove(),720)}
     c.onmessage=e=>{if(e.data?.type==='state'){let p=e.data.payload;mount(m(p.state,p.activeOrbs,p.count,p.showcase),p.state===3)}};
+    window.cmbSocket?.on('event-state',p=>mount(m(p.state,p.activeOrbs,p.count,p.showcase),p.state===3));
     c.postMessage({type:'request-state'});
   </script>
 </body>

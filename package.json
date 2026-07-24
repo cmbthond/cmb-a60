@@ -1,0 +1,11 @@
+{
+  "name": "cmb-event-control-socket",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.8.1"
+  }
+}
