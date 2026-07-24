@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rà Mắt CMB — Bảng điều khiển</title>
+    <title>CMB Ra Mắt — Bảng điều khiển</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -21,6 +21,11 @@
     <link rel="stylesheet" href="showcase-design.css" />
     <link rel="stylesheet" href="showcase-transition.css" />
     <link rel="stylesheet" href="showcase-button.css" />
+    <link rel="stylesheet" href="interaction-actions.css" />
+    <link rel="stylesheet" href="hide-screen-text.css" />
+    <link rel="stylesheet" href="count-scene.css" />
+    <link rel="stylesheet" href="showcase-clean.css" />
+    <link rel="stylesheet" href="showcase-stack.css" />
   </head>
   <body>
     <main class="console">
@@ -43,14 +48,14 @@
         <section class="state-section">
           <div class="section-title"><div><p class="eyebrow">01 / TRẠNG THÁI HIỂN THỊ</p><h2>Chọn kịch bản trình chiếu</h2></div><span class="live-pill"><i></i> LIVE</span></div>
           <div class="state-cards">
-            <button class="state-card active" data-state="1"><span class="card-number">01</span><span class="state-icon hands">◉</span><b>Cùng chạm,<br>cùng kết nối</b><small>Nhân vật đặt tay lên điểm chạm</small></button>
+            <button class="state-card active" data-state="1"><span class="card-number">01</span><span class="state-icon hands">◉</span><b>Cùng chạm,<br>cùng kết nối</b><small>Lãnh đạo đặt tay lên điểm chạm</small></button>
             <button class="state-card" data-state="2"><span class="card-number">02</span><span class="state-icon timer">10</span><b>Đếm ngược<br>ra mắt</b><small>Bộ đếm 10 giây ấn tượng</small></button>
             <button class="state-card" data-state="3"><span class="card-number">03</span><span class="state-icon apps">▦</span><b>Hệ sinh thái<br>ứng dụng</b><small>Giới thiệu MH2, MH3 và MH4</small></button>
           </div>
         </section>
 
         <section class="interaction-panel">
-          <div class="panel-heading"><div><p class="eyebrow">02 / TƯƠNG TÁC ĐIỂM CHẠM</p><h2>Kích hoạt hiệu ứng vòng tròn</h2><p class="hint">Chọn điểm tương ứng khi người tham gia đã đặt tay lên màn hình.</p></div><button class="reset" id="resetAll">↻ Đặt lại</button></div>
+          <div class="panel-heading"><div><p class="eyebrow">02 / TƯƠNG TÁC ĐIỂM CHẠM</p><h2>Kích hoạt hiệu ứng vòng tròn</h2><p class="hint">Chọn điểm tương ứng khi lãnh đạo đã đặt tay lên màn hình.</p></div><div class="interaction-actions"><button class="activate-all" id="activateAll">✦ Kích hoạt hiệu ứng tất cả</button><button class="reset" id="resetAll">↻ Đặt lại</button></div></div>
           <div class="touch-controls" id="touchControls"></div>
         </section>
 

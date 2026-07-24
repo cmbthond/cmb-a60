@@ -1,0 +1,2 @@
+.interaction-actions{display:flex;align-items:center;gap:10px}.activate-all{border:0;border-radius:7px;background:#1462db;color:#fff;padding:10px 14px;font:600 12px 'Be Vietnam Pro';box-shadow:0 6px 14px rgba(20,98,219,.24);cursor:pointer}.activate-all:hover{background:#0d55c9}
+@media(max-width:700px){.interaction-actions{width:100%;flex-direction:column}.interaction-actions button{width:100%}}
