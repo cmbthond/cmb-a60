@@ -80,7 +80,7 @@ document.getElementById('activateAll').addEventListener('click', ()=>{appState.a
 document.getElementById('openDisplay').addEventListener('click',()=>{ const displayUrl = new URL('index.html', window.location.href); const socketUrl = new URLSearchParams(window.location.search).get('socket'); if (socketUrl) displayUrl.searchParams.set('socket', socketUrl); displayWindow=window.open(displayUrl.toString(),'cmb-display','noopener=false'); if(!displayWindow) alert('Trình duyệt đang chặn cửa sổ màn hình lớn. Hãy cho phép pop-up và thử lại.'); });
 let countdownTimer, showcaseTimer;
 function startCountdown(){clearInterval(countdownTimer); countdownTimer=setInterval(()=>{if(appState.state!==2){clearInterval(countdownTimer);return}if(appState.count>0){appState.count--;render();if(appState.count===0){clearInterval(countdownTimer);setTimeout(()=>selectState(3),1300)}}},1500)}
-function startShowcase(){clearInterval(showcaseTimer);showcaseTimer=setInterval(()=>{if(appState.state!==3||appState.showcase>=2){clearInterval(showcaseTimer);return}appState.showcase++;render()},10000)}
+function startShowcase(){clearInterval(showcaseTimer);showcaseTimer=setInterval(()=>{if(appState.state!==3||appState.showcase>=2){clearInterval(showcaseTimer);return}appState.showcase++;render()},6000)}
 channel.onmessage = e => { if(e.data?.type === 'request-state') render(false); };
 socket?.on('event-state', (nextState) => { Object.assign(appState, nextState); render(false); });
 render();
