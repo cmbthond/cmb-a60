@@ -54,15 +54,16 @@ function countdownSceneMarkup(count) {
     : '<div class="count-overlay ready"><b>SẴN SÀNG RA MẮT</b></div>';
   return '<div class="screen tech-scene count-tech-scene"><div class="screen-bg"></div>' + counter + '<div class="touch-link"></div><div class="orb-row">' + Array.from({length: 7}, (_, i) => orbMarkup(true, i + 1)).join('') + '</div></div>';
 }
-function mountScreen(target, html, smoothShowcase) {
+function mountScreen(target, html, smoothShowcase, celebrate = false) {
   const oldScreen = target.querySelector('.app-showcase');
-  if (!smoothShowcase || !oldScreen) { target.innerHTML = html; return; }
+  if (!smoothShowcase || !oldScreen) { target.innerHTML = html; if (celebrate) requestAnimationFrame(() => window.startFireworks?.(target)); return; }
   const holder = document.createElement('div');
   holder.innerHTML = html;
   const nextScreen = holder.firstElementChild;
   nextScreen.classList.add('showcase-enter');
   oldScreen.classList.add('showcase-exit');
   target.appendChild(nextScreen);
+  if (celebrate) requestAnimationFrame(() => window.startFireworks?.(target));
   setTimeout(() => oldScreen.remove(), 720);
 }
 function screenOneMarkup(activeOrbs) {
@@ -76,7 +77,7 @@ function screenMarkup(state, activeOrbs = [], count = 10, showcase = 0) {
   return `<div class="screen tech-scene"><div class="screen-bg"></div><div class="circuit-board" aria-hidden="true"></div><div class="world-map" aria-hidden="true"></div><div class="city-line" aria-hidden="true"></div><div class="digital-wave" aria-hidden="true"></div><div class="floor-grid" aria-hidden="true"></div><div class="display-top"><div class="display-kicker">CMB GIỚI THIỆU</div><div class="display-title">RA MẮT</div><div class="display-subtitle">HỆ THỐNG ỨNG DỤNG QUẢN TRỊ · ỨNG DỤNG DI ĐỘNG · WEBSITE MỚI</div></div><div class="touch-link" aria-hidden="true"></div><div class="orb-row">${Array.from({length:7},(_,i)=>orbMarkup(activeOrbs.includes(i+1),i+1)).join('')}</div></div>`;
 }
 function render(emitSocket = true) {
-  mountScreen(document.getElementById('miniDisplay'), screenMarkup(appState.state, appState.activeOrbs, appState.count, appState.showcase), appState.state === 3);
+  mountScreen(document.getElementById('miniDisplay'), screenMarkup(appState.state, appState.activeOrbs, appState.count, appState.showcase), appState.state === 3, appState.state === 3);
   renderTouchControls();
   document.getElementById('stateLabel').textContent = `TRẠNG THÁI 0${appState.state}`;
   document.querySelectorAll('.state-card').forEach(el => el.classList.toggle('active', +el.dataset.state === appState.state));
