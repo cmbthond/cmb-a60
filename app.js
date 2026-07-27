@@ -31,20 +31,20 @@ if (stateCardsContainer && firstStateCard && interactionPanel) {
 if (stateCardsContainer) {
   const showcaseControls = document.createElement('div');
   showcaseControls.className = 'showcase-controls';
-  showcaseControls.innerHTML = '<h3>03 / NỘI DUNG TRÌNH CHIẾU</h3><div class="showcase-thumbs"><button class="showcase-thumb" data-showcase="0"><img src="website.png" alt="Website mới"><span>Website mới</span></button><button class="showcase-thumb" data-showcase="1"><img src="erp.png" alt="Ứng dụng quản trị"><span>Ứng dụng quản trị</span></button><button class="showcase-thumb" data-showcase="2"><img src="mobile.png" alt="Ứng dụng di động"><span>Ứng dụng di động</span></button><button class="showcase-thumb" data-showcase="3"><span>✦ Tổng kết 3 ứng dụng</span></button></div>';
+  showcaseControls.innerHTML = '<h3>03 / NỘI DUNG TRÌNH CHIẾU</h3><div class="showcase-thumbs"><button class="showcase-thumb" data-showcase="0"><img src="website.png" alt="Website mới"><span>Website mới</span></button><button class="showcase-thumb" data-showcase="1"><img src="mobile.png" alt="Mobile App"><span>Mobile App</span></button><button class="showcase-thumb" data-showcase="2"><img src="erp.png" alt="Hệ thống quản trị"><span>Hệ thống quản trị</span></button><button class="showcase-thumb" data-showcase="3"><span>✦ Tổng kết 3 ứng dụng</span></button></div>';
   stateCardsContainer.appendChild(showcaseControls);
 }
-document.querySelector('.state-card[data-state="3"] small').textContent = 'Ứng dụng quản trị · Website mới · Ứng dụng di động';
+document.querySelector('.state-card[data-state="3"] small').textContent = 'Website mới · Mobile App · Hệ thống quản trị';
 
 const showcaseSlides = [
   { title: 'WEBSITE MỚI', image: 'website.png' },
-  { title: 'HỆ SINH THÁI ỨNG DỤNG QUẢN TRỊ', image: 'erp.png' },
-  { title: 'ỨNG DỤNG DI ĐỘNG', image: 'mobile.png' },
+  { title: 'MOBILE APP', image: 'mobile.png' },
+  { title: 'HỆ THỐNG QUẢN TRỊ', image: 'erp.png' },
   { title: 'HỆ SINH THÁI ỨNG DỤNG CMB', overview: true }
 ];
 function showcaseMarkup(index) {
   const slide = showcaseSlides[index] || showcaseSlides[0];
-  if (slide.overview) return '<div class="screen app-showcase"><div class="showcase-copy"><h3>' + slide.title + '</h3></div><div class="apps-overview"><figure><img src="website.png" alt="Website mới"><figcaption>Website mới</figcaption></figure><figure><img src="erp.png" alt="Ứng dụng quản trị"><figcaption>Ứng dụng quản trị</figcaption></figure><figure><img src="mobile.png" alt="Ứng dụng di động"><figcaption>Ứng dụng di động</figcaption></figure></div></div>';
+  if (slide.overview) return '<div class="screen app-showcase"><div class="showcase-copy"><h3>' + slide.title + '</h3></div><div class="apps-overview"><figure><img src="website.png" alt="Website mới"><figcaption>Website mới</figcaption></figure><figure><img src="mobile.png" alt="Mobile App"><figcaption>Mobile App</figcaption></figure><figure><img src="erp.png" alt="Hệ thống quản trị"><figcaption>Hệ thống quản trị</figcaption></figure></div></div>';
   const dots = showcaseSlides.map((_, i) => '<i class="' + (i === index ? 'active' : '') + '"></i>').join('');
   return '<div class="screen app-showcase"><div class="showcase-copy"><p>' + slide.label + '</p><h3>' + slide.title + '</h3></div><div class="product-frame"><img src="' + slide.image + '" alt="' + slide.title + '"></div><div class="showcase-progress">' + dots + '</div></div>';
 }
