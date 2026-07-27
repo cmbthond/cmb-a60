@@ -1,9 +1,11 @@
 (() => {
   const palette = ['#ffffff', '#55efff', '#2c8cff', '#8a5cff', '#ffd35a'];
   const random = (min, max) => Math.random() * (max - min) + min;
+  const activeEffects = new WeakMap();
+  window.stopFireworks = (root) => activeEffects.get(root)?.();
 
   window.startFireworks = (root) => {
-    if (!root || root.querySelector('.fireworks-layer')) return;
+    if (!root || activeEffects.has(root)) return;
     const canvas = document.createElement('canvas');
     canvas.className = 'fireworks-layer';
     Object.assign(canvas.style, { position: 'absolute', inset: '0', width: '100%', height: '100%', zIndex: '20', pointerEvents: 'none' });
@@ -39,12 +41,10 @@
       ctx.globalAlpha = 1;
       requestAnimationFrame(draw);
     }
-    burst(rect.width * 0.15, rect.height * 0.24);
-    setTimeout(() => burst(rect.width * 0.78, rect.height * 0.2), 260);
-    setTimeout(() => burst(rect.width * 0.47, rect.height * 0.3), 520);
-    setTimeout(() => burst(rect.width * 0.28, rect.height * 0.42), 800);
-    setTimeout(() => burst(rect.width * 0.7, rect.height * 0.38), 1080);
-    setTimeout(() => { running = false; canvas.remove(); }, 5100);
+    const launch = () => burst(random(rect.width * 0.12, rect.width * 0.88), random(rect.height * 0.14, rect.height * 0.5));
+    launch(); setTimeout(launch, 220); setTimeout(launch, 480); setTimeout(launch, 760); setTimeout(launch, 1040);
+    const launchTimer = setInterval(launch, 620);
+    activeEffects.set(root, () => { running = false; clearInterval(launchTimer); canvas.remove(); activeEffects.delete(root); });
     draw();
   };
 })();

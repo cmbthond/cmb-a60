@@ -56,14 +56,14 @@ function countdownSceneMarkup(count) {
 }
 function mountScreen(target, html, smoothShowcase, celebrate = false) {
   const oldScreen = target.querySelector('.app-showcase');
-  if (!smoothShowcase || !oldScreen) { target.innerHTML = html; if (celebrate) requestAnimationFrame(() => window.startFireworks?.(target)); return; }
+  if (!smoothShowcase || !oldScreen) { target.innerHTML = html; if (celebrate) requestAnimationFrame(() => window.startFireworks?.(target)); else window.stopFireworks?.(target); return; }
   const holder = document.createElement('div');
   holder.innerHTML = html;
   const nextScreen = holder.firstElementChild;
   nextScreen.classList.add('showcase-enter');
   oldScreen.classList.add('showcase-exit');
   target.appendChild(nextScreen);
-  if (celebrate) requestAnimationFrame(() => window.startFireworks?.(target));
+  if (celebrate) requestAnimationFrame(() => window.startFireworks?.(target)); else window.stopFireworks?.(target);
   setTimeout(() => oldScreen.remove(), 720);
 }
 function screenOneMarkup(activeOrbs) {
