@@ -1,0 +1,8 @@
+@media(min-width:1101px){
+  .control-preview-layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(420px,.88fr);align-items:start;gap:30px;margin-top:52px}
+  .control-preview-layout .state-section{margin-top:0}
+  .control-preview-layout .preview-section{position:sticky;top:98px;margin-top:0;padding:22px;border:1px solid #e2e8f2;border-radius:15px;background:#fff;box-shadow:0 12px 28px rgba(25,54,112,.08)}
+  .control-preview-layout .preview-heading{margin-bottom:16px}
+  .control-preview-layout .mini-display{box-shadow:none}
+  .control-preview-layout .interaction-panel{margin-top:24px}
+}

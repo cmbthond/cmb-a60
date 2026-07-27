@@ -28,6 +28,18 @@ if (stateCardsContainer && firstStateCard && interactionPanel) {
   interactionPanel.classList.add('state-1-panel');
   stateCardsContainer.parentNode.insertBefore(interactionPanel, stateCardsContainer);
 }
+const workspace = document.querySelector('.workspace');
+const stateSection = document.querySelector('.state-section');
+const previewSection = document.querySelector('.preview-section');
+if (workspace && stateSection && previewSection) {
+  const twoColumnLayout = document.createElement('div');
+  twoColumnLayout.className = 'control-preview-layout';
+  const controlColumn = document.createElement('div');
+  controlColumn.className = 'control-column';
+  workspace.insertBefore(twoColumnLayout, stateSection);
+  twoColumnLayout.append(controlColumn, previewSection);
+  controlColumn.appendChild(stateSection);
+}
 if (stateCardsContainer) {
   const showcaseControls = document.createElement('div');
   showcaseControls.className = 'showcase-controls';

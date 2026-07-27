@@ -1,0 +1,18 @@
+@media(min-width:1101px){
+  .control-preview-layout{grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:24px}
+  .control-preview-layout .preview-section{padding:18px}
+  .control-preview-layout .mini-display{width:100%;aspect-ratio:16/9}
+  .control-column .state-card-single{margin-top:14px}
+  .control-column .state-card-single .state-card,.control-column .state-card{min-height:142px;padding:16px}
+  .control-column .state-card b{margin-top:25px;font-size:14px}
+  .control-column .state-card small{font-size:10px;margin-top:5px}
+  .control-column .state-icon{width:34px;height:34px;font-size:14px}
+  .control-column .interaction-panel{padding:20px;margin-top:18px}
+  .control-column .panel-heading h2{font-size:18px}
+  .control-column .hint{font-size:11px}
+  .control-column .touch-controls{grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+  .control-column .touch-btn{min-height:80px;padding:9px 5px}
+  .control-column .touch-orb{width:30px;height:30px;margin-bottom:5px}
+  .control-column .touch-btn b{font-size:9px}
+  .control-column .touch-btn small{font-size:8px}
+}

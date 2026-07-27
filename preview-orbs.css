@@ -1,0 +1,8 @@
+.mini-display .orb-row.custom-points .display-orb{width:8.5%!important}
+.mini-display .orb-row.custom-points .orb-label{font-size:clamp(8px,1vw,12px)}
+.mini-display .count-tech-scene .orb-row .display-orb{width:8.5%!important}
+.mini-display .count-tech-scene .orb-row .orb-label{font-size:clamp(8px,1vw,12px)}
+.mini-display .count-overlay{width:27%!important;max-width:240px!important}
+.mini-display .count-overlay b{font-size:clamp(54px,6vw,100px)!important}
+.mini-display .count-overlay.ready{width:auto;max-width:none;padding:28px 42px}
+.mini-display .count-overlay.ready b{font-size:clamp(13px,1.8vw,23px)!important}
