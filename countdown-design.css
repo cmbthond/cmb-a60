@@ -1,5 +1,5 @@
 /* Countdown uses the supplied numbered event visuals over the clean bg asset. */
-.count-screen{background:#031342 url('bg.png') center/cover no-repeat!important;position:relative;overflow:hidden}
+.count-screen{background:#031342 url('bg.jpg') center/cover no-repeat!important;position:relative;overflow:hidden}
 .count-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:count-in .42s ease-out both}
 .count-zero{position:relative;z-index:1;width:clamp(175px,37vw,605px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,#1854ca,#0b2d87 63%,#09236c);border:1px solid #2ad8ff;box-shadow:0 0 55px rgba(26,169,255,.75),inset 0 0 42px rgba(16,208,255,.42)}
 .count-zero p{position:absolute;top:23%;margin:0;color:#79f7ff;font:700 clamp(9px,1.8vw,28px) 'Space Grotesk';letter-spacing:.28em}.count-zero b{font:700 clamp(110px,25vw,400px)/.8 'Space Grotesk';color:#fff;text-shadow:0 0 28px #39caff}
