@@ -1,6 +1,6 @@
 const channel = new BroadcastChannel('cmb-event-control');
 const defaultTouchPoints = [{id:1,x:14,y:84},{id:2,x:27,y:84},{id:3,x:40,y:84},{id:4,x:53,y:84},{id:5,x:66,y:84},{id:6,x:79,y:84},{id:7,x:92,y:84}];
-const appState = { state: 1, activeOrbs: [], count: 10, showcase: 0, touchPoints: defaultTouchPoints };
+const appState = { state: 1, activeOrbs: [], count: 10, showcase: 0, touchRowY: 62, touchPoints: defaultTouchPoints };
 let displayWindow;
 const socket = window.cmbSocket;
 const orbMarkup = (active, label) => `<div class="display-orb ${active ? 'spinning' : ''}" aria-label="Điểm chạm ${label}"><svg class="orb-svg" viewBox="0 0 200 200" aria-hidden="true"><g class="orbit-track"><circle class="outer-glow" cx="100" cy="100" r="84"/><circle class="outer-solid" cx="100" cy="100" r="84"/><circle class="dash-ring" cx="100" cy="100" r="91"/><circle class="arc" cx="100" cy="100" r="76"/><circle class="inner-ring" cx="100" cy="100" r="63"/><circle class="inner-halo" cx="100" cy="100" r="56"/><circle class="node" cx="100" cy="8" r="4"/><circle class="node" cx="192" cy="100" r="4"/><circle class="node" cx="100" cy="192" r="4"/><circle class="node" cx="8" cy="100" r="4"/></g></svg><span class="orb-label">CMB</span></div>`;
@@ -64,7 +64,7 @@ function countdownSceneMarkup(count) {
   const counter = count > 0
     ? '<div class="count-overlay"><b>' + count + '</b></div>'
     : '<div class="count-overlay ready"><b>SẴN SÀNG RA MẮT</b></div>';
-  return '<div class="screen tech-scene count-tech-scene"><div class="screen-bg"></div>' + counter + '<div class="touch-link"></div><div class="orb-row">' + Array.from({length: 7}, (_, i) => orbMarkup(true, i + 1)).join('') + '</div></div>';
+  return '<div class="screen tech-scene count-tech-scene"><div class="screen-bg"></div>' + counter + '<div class="touch-link" style="top:' + appState.touchRowY + '%;bottom:auto"></div><div class="orb-row" style="top:' + appState.touchRowY + '%;bottom:auto;transform:translateY(-50%)">' + appState.touchPoints.map((_, i) => orbMarkup(true, i + 1)).join('') + '</div></div>';
 }
 function mountScreen(target, html, smoothShowcase, celebrate = false) {
   const oldScreen = target.querySelector('.app-showcase');
@@ -79,7 +79,7 @@ function mountScreen(target, html, smoothShowcase, celebrate = false) {
   setTimeout(() => oldScreen.remove(), 720);
 }
 function screenOneMarkup(activeOrbs) {
-  return '<div class="screen tech-scene"><div class="screen-bg"></div><div class="touch-link"></div><div class="orb-row custom-points">' + appState.touchPoints.map(point => pointOrbMarkup(point, activeOrbs.includes(point.id))).join('') + '</div></div>';
+  return '<div class="screen tech-scene"><div class="screen-bg"></div><div class="touch-link" style="top:' + appState.touchRowY + '%;bottom:auto"></div><div class="orb-row" style="top:' + appState.touchRowY + '%;bottom:auto;transform:translateY(-50%)">' + appState.touchPoints.map(point => orbMarkup(activeOrbs.includes(point.id), point.id)).join('') + '</div></div>';
 }
 
 function screenMarkup(state, activeOrbs = [], count = 10, showcase = 0) {
@@ -95,6 +95,7 @@ function render(emitSocket = true) {
   document.querySelectorAll('.state-card').forEach(el => el.classList.toggle('active', +el.dataset.state === appState.state));
   document.querySelector('.showcase-controls')?.classList.toggle('visible', appState.state === 3);
   document.querySelectorAll('.touch-btn').forEach(el => { const active=appState.activeOrbs.includes(+el.dataset.orb); el.classList.toggle('active',active); el.querySelector('small').textContent=active?'Đang xoay':'Sẵn sàng'; });
+  document.querySelectorAll('[data-touch-row-y]').forEach(button => button.classList.toggle('active', +button.dataset.touchRowY === appState.touchRowY));
   channel.postMessage({ type:'state', payload:appState });
   if (emitSocket && socket?.connected) socket.emit('event-state', appState);
 }
@@ -105,6 +106,7 @@ touchControls.addEventListener('click', e => { const remove=e.target.closest('[d
 document.getElementById('resetAll').addEventListener('click', ()=>{appState.activeOrbs=[];render()});
 document.getElementById('activateAll').addEventListener('click', ()=>{appState.activeOrbs=appState.touchPoints.map(point=>point.id);render()});
 document.getElementById('addPoint').addEventListener('click', ()=>{const id=Math.max(0,...appState.touchPoints.map(point=>point.id))+1;appState.touchPoints=[...appState.touchPoints,{id,x:50,y:68}];render()});
+document.querySelector('.touch-position-presets')?.addEventListener('click', event => { const button = event.target.closest('[data-touch-row-y], [data-touch-row-nudge]'); if (!button) return; appState.touchRowY = button.dataset.touchRowY ? +button.dataset.touchRowY : Math.max(8, Math.min(92, appState.touchRowY + +button.dataset.touchRowNudge)); render(); });
 function enablePointDrag(container) {
   let pointId = null;
   const move = (event) => { if (pointId === null) return; const box=container.getBoundingClientRect(); const x=Math.max(4,Math.min(96,(event.clientX-box.left)/box.width*100)); const y=Math.max(8,Math.min(92,(event.clientY-box.top)/box.height*100)); const point=appState.touchPoints.find(item=>item.id===pointId); if(point){point.x=x;point.y=y;const orb=container.querySelector('[data-point-id="'+pointId+'"]');if(orb){orb.style.left=x+'%';orb.style.top=y+'%'}} };
