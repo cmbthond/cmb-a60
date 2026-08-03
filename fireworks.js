@@ -1,5 +1,13 @@
 (() => {
   const palette = ['#ffffff', '#55efff', '#2c8cff', '#8a5cff', '#ffd35a'];
+  const soundEffects = [
+    'sounds/mixkit-clear-firework-explosions-2994.wav',
+    'sounds/mixkit-fast-whistle-firework-3103.wav',
+    'sounds/mixkit-firework-rockets-exploding-in-the-sky-2993.wav',
+    'sounds/mixkit-fireworks-bang-in-sky-2989.wav',
+    'sounds/mixkit-multiple-fireworks-explosions-1689.wav',
+    'sounds/mixkit-whistles-firework-echo-and-explosion-3106.wav'
+  ];
   const random = (min, max) => Math.random() * (max - min) + min;
   const activeEffects = new WeakMap();
   window.stopFireworks = (root) => activeEffects.get(root)?.();
@@ -17,7 +25,21 @@
     ctx.scale(devicePixelRatio, devicePixelRatio);
     const particles = [];
     let running = true;
+    let lastSound = -1;
+    let soundTimer;
+    let playingSound;
 
+    function playRandomSound() {
+      if (!running || !soundEffects.length) return;
+      let nextSound = Math.floor(Math.random() * soundEffects.length);
+      if (soundEffects.length > 1 && nextSound === lastSound) nextSound = (nextSound + 1) % soundEffects.length;
+      lastSound = nextSound;
+      playingSound?.pause();
+      playingSound = new Audio(soundEffects[nextSound]);
+      playingSound.volume = 0.28;
+      playingSound.play().catch(() => {});
+      soundTimer = setTimeout(playRandomSound, 3200);
+    }
     function burst(x, y) {
       const color = palette[Math.floor(Math.random() * palette.length)];
       const scale = Math.max(1, Math.min(rect.width, rect.height) / 720);
@@ -44,7 +66,15 @@
     const launch = () => burst(random(rect.width * 0.12, rect.width * 0.88), random(rect.height * 0.14, rect.height * 0.5));
     launch(); setTimeout(launch, 220); setTimeout(launch, 480); setTimeout(launch, 760); setTimeout(launch, 1040);
     const launchTimer = setInterval(launch, 620);
-    activeEffects.set(root, () => { running = false; clearInterval(launchTimer); canvas.remove(); activeEffects.delete(root); });
+    playRandomSound();
+    activeEffects.set(root, () => {
+      running = false;
+      clearInterval(launchTimer);
+      clearTimeout(soundTimer);
+      playingSound?.pause();
+      canvas.remove();
+      activeEffects.delete(root);
+    });
     draw();
   };
 })();
