@@ -1,13 +1,6 @@
 (() => {
   const palette = ['#ffffff', '#55efff', '#2c8cff', '#8a5cff', '#ffd35a'];
-  const soundEffects = [
-    'sounds/mixkit-clear-firework-explosions-2994.wav',
-    'sounds/mixkit-fast-whistle-firework-3103.wav',
-    'sounds/mixkit-firework-rockets-exploding-in-the-sky-2993.wav',
-    'sounds/mixkit-fireworks-bang-in-sky-2989.wav',
-    'sounds/mixkit-multiple-fireworks-explosions-1689.wav',
-    'sounds/mixkit-whistles-firework-echo-and-explosion-3106.wav'
-  ];
+  const soundEffects = ['sounds/Firework.wav'];
   const random = (min, max) => Math.random() * (max - min) + min;
   const activeEffects = new WeakMap();
   window.stopFireworks = (root) => activeEffects.get(root)?.();
