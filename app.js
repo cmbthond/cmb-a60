@@ -1,8 +1,21 @@
 const channel = new BroadcastChannel('cmb-event-control');
 const defaultTouchPoints = [{id:1,x:8,y:84},{id:2,x:20,y:84},{id:3,x:32,y:84},{id:4,x:44,y:84},{id:5,x:56,y:84},{id:6,x:68,y:84},{id:7,x:80,y:84},{id:8,x:92,y:84}];
-const appState = { state: 1, activeOrbs: [], count: 10, showcase: 0, touchRowY: 62, touchPoints: defaultTouchPoints };
+const appState = { state: 1, activeOrbs: [], count: 10, showcase: 0, musicEnabled: true, countdownSoundEnabled: true, touchRowY: 62, touchPoints: defaultTouchPoints };
 let displayWindow;
 const socket = window.cmbSocket;
+const openDisplayButton = document.getElementById('openDisplay');
+const musicToggle = document.createElement('button');
+musicToggle.id = 'toggleMusic';
+musicToggle.type = 'button';
+musicToggle.className = 'music-btn';
+const countdownSoundToggle = document.createElement('button');
+countdownSoundToggle.id = 'toggleCountdownSound';
+countdownSoundToggle.type = 'button';
+countdownSoundToggle.className = 'music-btn';
+countdownSoundToggle.title = 'Bat/tat am thanh dem nguoc';
+const headerActions = document.createElement('div');
+headerActions.className = 'header-actions';
+openDisplayButton.parentNode.insertBefore(headerActions, openDisplayButton); headerActions.append(musicToggle, countdownSoundToggle, openDisplayButton);
 const orbMarkup = (active, label) => `<div class="display-orb ${active ? 'spinning' : ''}" aria-label="Điểm chạm ${label}"><svg class="orb-svg" viewBox="0 0 200 200" aria-hidden="true"><g class="orbit-track"><circle class="outer-glow" cx="100" cy="100" r="84"/><circle class="outer-solid" cx="100" cy="100" r="84"/><circle class="dash-ring" cx="100" cy="100" r="91"/><circle class="arc" cx="100" cy="100" r="76"/><circle class="inner-ring" cx="100" cy="100" r="63"/><circle class="inner-halo" cx="100" cy="100" r="56"/><circle class="node" cx="100" cy="8" r="4"/><circle class="node" cx="192" cy="100" r="4"/><circle class="node" cx="100" cy="192" r="4"/><circle class="node" cx="8" cy="100" r="4"/></g></svg><span class="orb-label">${label}</span></div>`;
 
 const touchControls = document.getElementById('touchControls');
@@ -95,18 +108,30 @@ function screenMarkup(state, activeOrbs = [], count = 10, showcase = 0) {
   return `<div class="screen tech-scene"><div class="screen-bg"></div><div class="circuit-board" aria-hidden="true"></div><div class="world-map" aria-hidden="true"></div><div class="city-line" aria-hidden="true"></div><div class="digital-wave" aria-hidden="true"></div><div class="floor-grid" aria-hidden="true"></div><div class="display-top"><div class="display-kicker">CMB GIỚI THIỆU</div><div class="display-title">RA MẮT</div><div class="display-subtitle">HỆ THỐNG ỨNG DỤNG QUẢN TRỊ · ỨNG DỤNG DI ĐỘNG · WEBSITE MỚI</div></div><div class="touch-link" aria-hidden="true"></div><div class="orb-row">${Array.from({length:8},(_,i)=>orbMarkup(activeOrbs.includes(i+1),i+1)).join('')}</div></div>`;
 }
 function render(emitSocket = true) {
-  mountScreen(document.getElementById('miniDisplay'), screenMarkup(appState.state, appState.activeOrbs, appState.count, appState.showcase), appState.state === 3, appState.state === 3);
+function markCountdownTen(target) {
+  const overlay = target.querySelector('.count-overlay');
+  overlay?.classList.toggle('count-ten', overlay.querySelector('b')?.textContent.trim() === '10');
+}
+  const miniDisplay = document.getElementById('miniDisplay');
+  mountScreen(miniDisplay, screenMarkup(appState.state, appState.activeOrbs, appState.count, appState.showcase), appState.state === 3, appState.state === 3);
+  markCountdownTen(miniDisplay);
   renderTouchControls();
   document.getElementById('stateLabel').textContent = `TRẠNG THÁI 0${appState.state}`;
   document.querySelectorAll('.state-card').forEach(el => el.classList.toggle('active', +el.dataset.state === appState.state));
   document.querySelector('.showcase-controls')?.classList.toggle('visible', appState.state === 3);
+  musicToggle.innerHTML = appState.musicEnabled ? '&#128266; T&#7855;t nh&#7841;c' : '&#128263; B&#7853;t nh&#7841;c';
+  musicToggle.classList.toggle('muted', !appState.musicEnabled);
+  countdownSoundToggle.innerHTML = appState.countdownSoundEnabled ? '&#9201; T&#7855;t tick' : '&#128263; B&#7853;t tick';
+  countdownSoundToggle.classList.toggle('muted', !appState.countdownSoundEnabled);
   document.querySelectorAll('.touch-btn').forEach(el => { const active=appState.activeOrbs.includes(+el.dataset.orb); el.classList.toggle('active',active); el.querySelector('small').textContent=active?'Đang xoay':'Sẵn sàng'; });
   document.querySelectorAll('[data-touch-row-y]').forEach(button => button.classList.toggle('active', +button.dataset.touchRowY === appState.touchRowY));
   channel.postMessage({ type:'state', payload:appState });
   if (emitSocket && socket?.connected) socket.emit('event-state', appState);
 }
 function selectState(state) { clearInterval(countdownTimer); clearInterval(showcaseTimer); appState.state = state; appState.count = 10; appState.showcase = 0; render(); if (state === 2) startCountdown(); if (state === 3) startShowcase(); }
+musicToggle.addEventListener('click', () => { appState.musicEnabled = !appState.musicEnabled; render(); });
 document.querySelectorAll('.state-card').forEach(btn => btn.addEventListener('click', () => selectState(+btn.dataset.state)));
+countdownSoundToggle.addEventListener('click', () => { appState.countdownSoundEnabled = !appState.countdownSoundEnabled; render(); });
 document.querySelector('.showcase-controls')?.addEventListener('click', e => { const button = e.target.closest('.showcase-thumb'); if (!button) return; clearInterval(countdownTimer); clearInterval(showcaseTimer); appState.state = 3; appState.showcase = +button.dataset.showcase; render(); startShowcase(); });
 touchControls.addEventListener('click', e => { const remove=e.target.closest('[data-remove]'); if(remove){const id=+remove.dataset.remove;appState.touchPoints=appState.touchPoints.filter(point=>point.id!==id);appState.activeOrbs=appState.activeOrbs.filter(pointId=>pointId!==id);render();return}const btn=e.target.closest('.touch-btn'); if(!btn) return; const n=+btn.dataset.orb; appState.activeOrbs=appState.activeOrbs.includes(n)?appState.activeOrbs.filter(x=>x!==n):[...appState.activeOrbs,n]; render(); });
 document.getElementById('resetAll').addEventListener('click', ()=>{appState.activeOrbs=[];render()});

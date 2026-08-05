@@ -36,7 +36,11 @@
     const c=new BroadcastChannel('cmb-event-control'),d=document.getElementById('display');
     const orb=(active)=>`<div class="display-orb ${active?'spinning':''}"><svg class="orb-svg" viewBox="0 0 200 200" aria-hidden="true"><g class="orbit-track"><circle class="outer-glow" cx="100" cy="100" r="84"/><circle class="outer-solid" cx="100" cy="100" r="84"/><circle class="dash-ring" cx="100" cy="100" r="91"/><circle class="arc" cx="100" cy="100" r="76"/><circle class="inner-ring" cx="100" cy="100" r="63"/><circle class="inner-halo" cx="100" cy="100" r="56"/><circle class="node" cx="100" cy="8" r="4"/><circle class="node" cx="192" cy="100" r="4"/><circle class="node" cx="100" cy="192" r="4"/><circle class="node" cx="8" cy="100" r="4"/></g></svg><span class="orb-label">CMB</span></div>`;
     const defaultPoints=[{id:1,x:8,y:84},{id:2,x:20,y:84},{id:3,x:32,y:84},{id:4,x:44,y:84},{id:5,x:56,y:84},{id:6,x:68,y:84},{id:7,x:80,y:84},{id:8,x:92,y:84}];
-    let currentState={state:1,activeOrbs:[],count:10,showcase:0,touchRowY:62,touchPoints:defaultPoints};
+    let currentState={state:1,activeOrbs:[],count:10,showcase:0,musicEnabled:true,countdownSoundEnabled:true,touchRowY:62,touchPoints:defaultPoints};
+    const backgroundMusic=new Audio('sounds/fuego.mp3');backgroundMusic.loop=true;backgroundMusic.preload='auto';backgroundMusic.volume=.42;
+    function syncBackgroundMusic(){const shouldPlay=currentState.state===1&&currentState.musicEnabled!==false;if(shouldPlay){backgroundMusic.play().catch(()=>{});return}backgroundMusic.pause();backgroundMusic.currentTime=0}
+    const countdownTick=new Audio('sounds/tick.wav');countdownTick.preload='auto';countdownTick.volume=.65;
+    function playCountdownTick(previousState,previousCount){if(currentState.state!==2||currentState.countdownSoundEnabled===false||(previousState===2&&previousCount===currentState.count))return;countdownTick.currentTime=0;countdownTick.play().catch(()=>{})}
     const pointOrb=(point,active)=>orb(active).replace('class="display-orb','data-point-id="'+point.id+'" style="left:'+point.x+'%;top:'+point.y+'%" class="display-orb');
     const slides=[{title:'WEBSITE MỚI',image:'website.png'},{title:'MOBILE APP',image:'mobile.png'},{title:'HỆ THỐNG QUẢN TRỊ',image:'erp.png'},{title:'HỆ SINH THÁI ỨNG DỤNG CMB',overview:true}];
     function showcase(index){const slide=slides[index]||slides[0];if(slide.overview)return '<div class="screen app-showcase"><div class="showcase-copy"><h3>'+slide.title+'</h3></div><div class="apps-overview"><figure><img src="website.png" alt="Website mới"><figcaption>Website mới</figcaption></figure><figure><img src="mobile.png" alt="Mobile App"><figcaption>Mobile App</figcaption></figure><figure><img src="erp.png" alt="Hệ thống quản trị"><figcaption>Hệ thống quản trị</figcaption></figure></div></div>';const dots=slides.map((_,i)=>'<i class="'+(i===index?'active':'')+'"></i>').join('');return '<div class="screen app-showcase"><div class="showcase-copy"><p></p><h3>'+slide.title+'</h3></div><div class="product-frame"><img src="'+slide.image+'" alt="'+slide.title+'"></div><div class="showcase-progress">'+dots+'</div></div>'}
@@ -50,7 +54,11 @@
         <div class="display-title">RA MẮT</div><div class="display-subtitle">HỆ THỐNG ỨNG DỤNG QUẢN TRỊ · ỨNG DỤNG DI ĐỘNG · WEBSITE MỚI</div></div><div class="touch-link"></div><div class="orb-row">${Array.from({length:8},(_,i)=>orb(a.includes(i+1))).join('')}</div></div>`;
     }
     function mount(html,smooth,celebrate=false){const old=d.querySelector('.app-showcase');if(!smooth||!old){d.innerHTML=html;if(celebrate)requestAnimationFrame(()=>window.startFireworks?.(d));else window.stopFireworks?.(d);return}const holder=document.createElement('div');holder.innerHTML=html;const next=holder.firstElementChild;next.classList.add('showcase-enter');old.classList.add('showcase-exit');d.appendChild(next);if(celebrate)requestAnimationFrame(()=>window.startFireworks?.(d));else window.stopFireworks?.(d);setTimeout(()=>old.remove(),720)}
-    function showState(p){currentState={...currentState,...p,touchPoints:p.touchPoints||currentState.touchPoints};mount(m(currentState.state,currentState.activeOrbs,currentState.count,currentState.showcase,currentState.touchPoints,currentState.touchRowY),currentState.state===3,currentState.state===3)}
+    function markCountdownTen(){const overlay=d.querySelector('.count-overlay');overlay?.classList.toggle('count-ten',overlay.querySelector('b')?.textContent.trim()==='10')}
+
+
+
+    function showState(p){const previousState=currentState.state,previousCount=currentState.count;currentState={...currentState,...p,touchPoints:p.touchPoints||currentState.touchPoints};mount(m(currentState.state,currentState.activeOrbs,currentState.count,currentState.showcase,currentState.touchPoints,currentState.touchRowY),currentState.state===3,currentState.state===3);markCountdownTen();syncBackgroundMusic();playCountdownTick(previousState,previousCount)}
     c.onmessage=e=>{if(e.data?.type==='state')showState(e.data.payload)};
     window.cmbSocket?.on('event-state',showState);
     let draggedPoint=null;
