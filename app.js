@@ -45,6 +45,8 @@ if (stateCardsContainer) {
   showcaseControls.className = 'showcase-controls';
   showcaseControls.innerHTML = '<h3>03 / NỘI DUNG TRÌNH CHIẾU</h3><div class="showcase-thumbs"><button class="showcase-thumb" data-showcase="0"><img src="website.png" alt="Website mới"><span>Website mới</span></button><button class="showcase-thumb" data-showcase="1"><img src="mobile.png" alt="Mobile App"><span>Mobile App</span></button><button class="showcase-thumb" data-showcase="2"><img src="erp.png" alt="Hệ thống quản trị"><span>Hệ thống quản trị</span></button><button class="showcase-thumb" data-showcase="3"><span>✦ Tổng kết 3 ứng dụng</span></button></div>';
   stateCardsContainer.appendChild(showcaseControls);
+  const finalStateCard = document.querySelector('.state-card[data-state="4"]');
+  if (finalStateCard) showcaseControls.after(finalStateCard);
 }
 document.querySelector('.state-card[data-state="3"] small').textContent = 'Website mới · Mobile App · Hệ thống quản trị';
 
