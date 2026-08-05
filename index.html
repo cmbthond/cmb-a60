@@ -50,7 +50,7 @@
         <div class="display-title">RA MẮT</div><div class="display-subtitle">HỆ THỐNG ỨNG DỤNG QUẢN TRỊ · ỨNG DỤNG DI ĐỘNG · WEBSITE MỚI</div></div><div class="touch-link"></div><div class="orb-row">${Array.from({length:8},(_,i)=>orb(a.includes(i+1))).join('')}</div></div>`;
     }
     function mount(html,smooth,celebrate=false){const old=d.querySelector('.app-showcase');if(!smooth||!old){d.innerHTML=html;if(celebrate)requestAnimationFrame(()=>window.startFireworks?.(d));else window.stopFireworks?.(d);return}const holder=document.createElement('div');holder.innerHTML=html;const next=holder.firstElementChild;next.classList.add('showcase-enter');old.classList.add('showcase-exit');d.appendChild(next);if(celebrate)requestAnimationFrame(()=>window.startFireworks?.(d));else window.stopFireworks?.(d);setTimeout(()=>old.remove(),720)}
-    function showState(p){currentState={...currentState,...p,touchPoints:p.touchPoints||currentState.touchPoints};mount(m(currentState.state,currentState.activeOrbs,currentState.count,currentState.showcase,currentState.touchPoints,currentState.touchRowY),currentState.state===3)}
+    function showState(p){currentState={...currentState,...p,touchPoints:p.touchPoints||currentState.touchPoints};mount(m(currentState.state,currentState.activeOrbs,currentState.count,currentState.showcase,currentState.touchPoints,currentState.touchRowY),currentState.state===3,currentState.state===3)}
     c.onmessage=e=>{if(e.data?.type==='state')showState(e.data.payload)};
     window.cmbSocket?.on('event-state',showState);
     let draggedPoint=null;
