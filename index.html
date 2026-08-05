@@ -35,7 +35,7 @@
   <script>
     const c=new BroadcastChannel('cmb-event-control'),d=document.getElementById('display');
     const orb=(active)=>`<div class="display-orb ${active?'spinning':''}"><svg class="orb-svg" viewBox="0 0 200 200" aria-hidden="true"><g class="orbit-track"><circle class="outer-glow" cx="100" cy="100" r="84"/><circle class="outer-solid" cx="100" cy="100" r="84"/><circle class="dash-ring" cx="100" cy="100" r="91"/><circle class="arc" cx="100" cy="100" r="76"/><circle class="inner-ring" cx="100" cy="100" r="63"/><circle class="inner-halo" cx="100" cy="100" r="56"/><circle class="node" cx="100" cy="8" r="4"/><circle class="node" cx="192" cy="100" r="4"/><circle class="node" cx="100" cy="192" r="4"/><circle class="node" cx="8" cy="100" r="4"/></g></svg><span class="orb-label">CMB</span></div>`;
-    const defaultPoints=[{id:1,x:14,y:84},{id:2,x:27,y:84},{id:3,x:40,y:84},{id:4,x:53,y:84},{id:5,x:66,y:84},{id:6,x:79,y:84},{id:7,x:92,y:84}];
+    const defaultPoints=[{id:1,x:8,y:84},{id:2,x:20,y:84},{id:3,x:32,y:84},{id:4,x:44,y:84},{id:5,x:56,y:84},{id:6,x:68,y:84},{id:7,x:80,y:84},{id:8,x:92,y:84}];
     let currentState={state:1,activeOrbs:[],count:10,showcase:0,touchRowY:62,touchPoints:defaultPoints};
     const pointOrb=(point,active)=>orb(active).replace('class="display-orb','data-point-id="'+point.id+'" style="left:'+point.x+'%;top:'+point.y+'%" class="display-orb');
     const slides=[{title:'WEBSITE MỚI',image:'website.png'},{title:'MOBILE APP',image:'mobile.png'},{title:'HỆ THỐNG QUẢN TRỊ',image:'erp.png'},{title:'HỆ SINH THÁI ỨNG DỤNG CMB',overview:true}];
@@ -46,7 +46,7 @@
       if(s===3)return showcase(showcaseIndex);
       if(s===2)return countdownScene(n,points,touchRowY);
       return `<div class="screen tech-scene"><div class="screen-bg"></div><div class="circuit-board"></div><div class="world-map"></div><div class="city-line"></div><div class="digital-wave"></div><div class="floor-grid"></div><div class="display-top">
-        <div class="display-title">RA MẮT</div><div class="display-subtitle">HỆ THỐNG ỨNG DỤNG QUẢN TRỊ · ỨNG DỤNG DI ĐỘNG · WEBSITE MỚI</div></div><div class="touch-link"></div><div class="orb-row">${Array.from({length:7},(_,i)=>orb(a.includes(i+1))).join('')}</div></div>`;
+        <div class="display-title">RA MẮT</div><div class="display-subtitle">HỆ THỐNG ỨNG DỤNG QUẢN TRỊ · ỨNG DỤNG DI ĐỘNG · WEBSITE MỚI</div></div><div class="touch-link"></div><div class="orb-row">${Array.from({length:8},(_,i)=>orb(a.includes(i+1))).join('')}</div></div>`;
     }
     function mount(html,smooth,celebrate=false){const old=d.querySelector('.app-showcase');if(!smooth||!old){d.innerHTML=html;if(celebrate)requestAnimationFrame(()=>window.startFireworks?.(d));else window.stopFireworks?.(d);return}const holder=document.createElement('div');holder.innerHTML=html;const next=holder.firstElementChild;next.classList.add('showcase-enter');old.classList.add('showcase-exit');d.appendChild(next);if(celebrate)requestAnimationFrame(()=>window.startFireworks?.(d));else window.stopFireworks?.(d);setTimeout(()=>old.remove(),720)}
     function showState(p){currentState={...currentState,...p,touchPoints:p.touchPoints||currentState.touchPoints};mount(m(currentState.state,currentState.activeOrbs,currentState.count,currentState.showcase,currentState.touchPoints,currentState.touchRowY),currentState.state===3,currentState.state===3)}

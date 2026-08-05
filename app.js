@@ -1,5 +1,5 @@
 const channel = new BroadcastChannel('cmb-event-control');
-const defaultTouchPoints = [{id:1,x:14,y:84},{id:2,x:27,y:84},{id:3,x:40,y:84},{id:4,x:53,y:84},{id:5,x:66,y:84},{id:6,x:79,y:84},{id:7,x:92,y:84}];
+const defaultTouchPoints = [{id:1,x:8,y:84},{id:2,x:20,y:84},{id:3,x:32,y:84},{id:4,x:44,y:84},{id:5,x:56,y:84},{id:6,x:68,y:84},{id:7,x:80,y:84},{id:8,x:92,y:84}];
 const appState = { state: 1, activeOrbs: [], count: 10, showcase: 0, touchRowY: 62, touchPoints: defaultTouchPoints };
 let displayWindow;
 const socket = window.cmbSocket;
@@ -12,7 +12,7 @@ function renderTouchControls() {
 function pointOrbMarkup(point, active) {
   return orbMarkup(active, point.id).replace('aria-label=', 'data-point-id="' + point.id + '" style="left:' + point.x + '%;top:' + point.y + '%" aria-label=');
 }
-touchControls.innerHTML = Array.from({ length: 7 }, (_, i) => `
+touchControls.innerHTML = Array.from({ length: 8 }, (_, i) => `
   <button class="touch-btn" data-orb="${i + 1}"><span class="touch-orb"></span><b>Điểm chạm ${i + 1}</b><small>Sẵn sàng</small></button>`).join('');
 
 // The touch controls are relevant only to Screen 1, so place them immediately
@@ -86,7 +86,7 @@ function screenMarkup(state, activeOrbs = [], count = 10, showcase = 0) {
   if (state === 1) return screenOneMarkup(activeOrbs);
   if (state === 3) return showcaseMarkup(showcase);
   if (state === 2) return countdownSceneMarkup(count);
-  return `<div class="screen tech-scene"><div class="screen-bg"></div><div class="circuit-board" aria-hidden="true"></div><div class="world-map" aria-hidden="true"></div><div class="city-line" aria-hidden="true"></div><div class="digital-wave" aria-hidden="true"></div><div class="floor-grid" aria-hidden="true"></div><div class="display-top"><div class="display-kicker">CMB GIỚI THIỆU</div><div class="display-title">RA MẮT</div><div class="display-subtitle">HỆ THỐNG ỨNG DỤNG QUẢN TRỊ · ỨNG DỤNG DI ĐỘNG · WEBSITE MỚI</div></div><div class="touch-link" aria-hidden="true"></div><div class="orb-row">${Array.from({length:7},(_,i)=>orbMarkup(activeOrbs.includes(i+1),i+1)).join('')}</div></div>`;
+  return `<div class="screen tech-scene"><div class="screen-bg"></div><div class="circuit-board" aria-hidden="true"></div><div class="world-map" aria-hidden="true"></div><div class="city-line" aria-hidden="true"></div><div class="digital-wave" aria-hidden="true"></div><div class="floor-grid" aria-hidden="true"></div><div class="display-top"><div class="display-kicker">CMB GIỚI THIỆU</div><div class="display-title">RA MẮT</div><div class="display-subtitle">HỆ THỐNG ỨNG DỤNG QUẢN TRỊ · ỨNG DỤNG DI ĐỘNG · WEBSITE MỚI</div></div><div class="touch-link" aria-hidden="true"></div><div class="orb-row">${Array.from({length:8},(_,i)=>orbMarkup(activeOrbs.includes(i+1),i+1)).join('')}</div></div>`;
 }
 function render(emitSocket = true) {
   mountScreen(document.getElementById('miniDisplay'), screenMarkup(appState.state, appState.activeOrbs, appState.count, appState.showcase), appState.state === 3, appState.state === 3);
