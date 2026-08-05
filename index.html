@@ -39,6 +39,7 @@
     let currentState={state:1,activeOrbs:[],count:10,showcase:0,musicEnabled:true,countdownSoundEnabled:true,touchRowY:62,touchPoints:defaultPoints};
     const backgroundMusic=new Audio('sounds/fuego.mp3');backgroundMusic.loop=true;backgroundMusic.preload='auto';backgroundMusic.volume=.42;
     function syncBackgroundMusic(){const shouldPlay=currentState.state===1&&currentState.musicEnabled!==false;if(shouldPlay){backgroundMusic.play().catch(()=>{});return}backgroundMusic.pause();backgroundMusic.currentTime=0}
+    if(new URLSearchParams(window.location.search).get('autoplayMusic')==='1')backgroundMusic.play().catch(()=>{});
     const countdownTick=new Audio('sounds/tick.wav');countdownTick.preload='auto';countdownTick.volume=.65;
     function playCountdownTick(previousState,previousCount){if(currentState.state!==2||currentState.countdownSoundEnabled===false||(previousState===2&&previousCount===currentState.count))return;countdownTick.currentTime=0;countdownTick.play().catch(()=>{})}
     const pointOrb=(point,active)=>orb(active).replace('class="display-orb','data-point-id="'+point.id+'" style="left:'+point.x+'%;top:'+point.y+'%" class="display-orb');

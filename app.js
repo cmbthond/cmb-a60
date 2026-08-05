@@ -148,6 +148,15 @@ function enablePointDrag(container) {
 enablePointDrag(document.getElementById('miniDisplay'));
 document.getElementById('openDisplay').addEventListener('click',()=>{ const displayUrl = new URL('index.html', window.location.href); const socketUrl = new URLSearchParams(window.location.search).get('socket'); if (socketUrl) displayUrl.searchParams.set('socket', socketUrl); displayWindow=window.open(displayUrl.toString(),'cmb-display','noopener=false'); if(!displayWindow) alert('Trình duyệt đang chặn cửa sổ màn hình lớn. Hãy cho phép pop-up và thử lại.'); });
 let countdownTimer, showcaseTimer;
+openDisplayButton.addEventListener('click', (event) => {
+  event.stopImmediatePropagation();
+  const displayUrl = new URL('index.html', window.location.href);
+  const socketUrl = new URLSearchParams(window.location.search).get('socket');
+  if (socketUrl) displayUrl.searchParams.set('socket', socketUrl);
+  if (appState.state === 1 && appState.musicEnabled) displayUrl.searchParams.set('autoplayMusic', '1');
+  displayWindow = window.open(displayUrl.toString(), 'cmb-display', 'noopener=false');
+  if (!displayWindow) alert('Please allow pop-ups and try again.');
+}, true);
 function startCountdown(){clearInterval(countdownTimer); countdownTimer=setInterval(()=>{if(appState.state!==2){clearInterval(countdownTimer);return}if(appState.count>1){appState.count--;render();if(appState.count===1){clearInterval(countdownTimer);setTimeout(()=>selectState(3),1500)}}},1500)}
 function startShowcase(){clearInterval(showcaseTimer);showcaseTimer=setInterval(()=>{if(appState.state!==3){clearInterval(showcaseTimer);return}if(appState.showcase>=3){clearInterval(showcaseTimer);selectState(4);return}appState.showcase++;render()},6000)}
 channel.onmessage = e => { if(e.data?.type === 'request-state') render(false); if(e.data?.type === 'state'){Object.assign(appState,e.data.payload);render(false)} };
