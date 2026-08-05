@@ -82,14 +82,18 @@ function screenOneMarkup(activeOrbs) {
   return '<div class="screen tech-scene"><div class="screen-bg"></div><div class="touch-link" style="top:' + appState.touchRowY + '%;bottom:auto"></div><div class="orb-row" style="top:' + appState.touchRowY + '%;bottom:auto;transform:translateY(-50%)">' + appState.touchPoints.map(point => orbMarkup(activeOrbs.includes(point.id), point.id)).join('') + '</div></div>';
 }
 
+function finalScreenMarkup() {
+  return '<div class="screen final-screen"><img src="images/final.png" alt="Man hinh ket thuc"></div>';
+}
 function screenMarkup(state, activeOrbs = [], count = 10, showcase = 0) {
   if (state === 1) return screenOneMarkup(activeOrbs);
   if (state === 3) return showcaseMarkup(showcase);
   if (state === 2) return countdownSceneMarkup(count);
+  if (state === 4) return finalScreenMarkup();
   return `<div class="screen tech-scene"><div class="screen-bg"></div><div class="circuit-board" aria-hidden="true"></div><div class="world-map" aria-hidden="true"></div><div class="city-line" aria-hidden="true"></div><div class="digital-wave" aria-hidden="true"></div><div class="floor-grid" aria-hidden="true"></div><div class="display-top"><div class="display-kicker">CMB GIỚI THIỆU</div><div class="display-title">RA MẮT</div><div class="display-subtitle">HỆ THỐNG ỨNG DỤNG QUẢN TRỊ · ỨNG DỤNG DI ĐỘNG · WEBSITE MỚI</div></div><div class="touch-link" aria-hidden="true"></div><div class="orb-row">${Array.from({length:8},(_,i)=>orbMarkup(activeOrbs.includes(i+1),i+1)).join('')}</div></div>`;
 }
 function render(emitSocket = true) {
-  mountScreen(document.getElementById('miniDisplay'), screenMarkup(appState.state, appState.activeOrbs, appState.count, appState.showcase), appState.state === 3, appState.state === 3);
+  mountScreen(document.getElementById('miniDisplay'), screenMarkup(appState.state, appState.activeOrbs, appState.count, appState.showcase), appState.state === 3);
   renderTouchControls();
   document.getElementById('stateLabel').textContent = `TRẠNG THÁI 0${appState.state}`;
   document.querySelectorAll('.state-card').forEach(el => el.classList.toggle('active', +el.dataset.state === appState.state));
@@ -118,7 +122,7 @@ enablePointDrag(document.getElementById('miniDisplay'));
 document.getElementById('openDisplay').addEventListener('click',()=>{ const displayUrl = new URL('index.html', window.location.href); const socketUrl = new URLSearchParams(window.location.search).get('socket'); if (socketUrl) displayUrl.searchParams.set('socket', socketUrl); displayWindow=window.open(displayUrl.toString(),'cmb-display','noopener=false'); if(!displayWindow) alert('Trình duyệt đang chặn cửa sổ màn hình lớn. Hãy cho phép pop-up và thử lại.'); });
 let countdownTimer, showcaseTimer;
 function startCountdown(){clearInterval(countdownTimer); countdownTimer=setInterval(()=>{if(appState.state!==2){clearInterval(countdownTimer);return}if(appState.count>1){appState.count--;render();if(appState.count===1){clearInterval(countdownTimer);setTimeout(()=>selectState(3),1500)}}},1500)}
-function startShowcase(){clearInterval(showcaseTimer);showcaseTimer=setInterval(()=>{if(appState.state!==3||appState.showcase>=3){clearInterval(showcaseTimer);return}appState.showcase++;render()},6000)}
+function startShowcase(){clearInterval(showcaseTimer);showcaseTimer=setInterval(()=>{if(appState.state!==3){clearInterval(showcaseTimer);return}if(appState.showcase>=3){clearInterval(showcaseTimer);selectState(4);return}appState.showcase++;render()},6000)}
 channel.onmessage = e => { if(e.data?.type === 'request-state') render(false); if(e.data?.type === 'state'){Object.assign(appState,e.data.payload);render(false)} };
 socket?.on('event-state', (nextState) => { Object.assign(appState, nextState); render(false); });
 render();

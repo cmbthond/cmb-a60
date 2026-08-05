@@ -16,7 +16,7 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   socket.emit('event-state', eventState);
   socket.on('event-state', (nextState) => {
-    if (!nextState || ![1, 2, 3].includes(Number(nextState.state))) return;
+    if (!nextState || ![1, 2, 3, 4].includes(Number(nextState.state))) return;
     eventState = {
       state: Number(nextState.state),
       activeOrbs: Array.isArray(nextState.activeOrbs) ? nextState.activeOrbs : [],

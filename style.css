@@ -11,3 +11,6 @@
   top: 50%;
   transform: translate(-50%, -50%);
 }
+
+/* Screen 4: the closing visual is intentionally just the supplied artwork. */
+.final-screen{background:#000}.final-screen img{display:block;width:100%;height:100%;object-fit:contain}
