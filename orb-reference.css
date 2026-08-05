@@ -5,3 +5,11 @@
 .display-orb .outer-solid{fill:none;stroke:#52f5ff;stroke-width:2.3}.display-orb .outer-glow{fill:none;stroke:#1250d4;stroke-width:5;opacity:.85}.display-orb .dash-ring{fill:none;stroke:#4ceeff;stroke-width:3;stroke-linecap:round;stroke-dasharray:3 11}.display-orb .inner-ring{fill:none;stroke:#23dffd;stroke-width:1.8}.display-orb .inner-halo{fill:#071352;stroke:#1470df;stroke-width:2}.display-orb .arc{fill:none;stroke:#37eaff;stroke-width:3;stroke-linecap:round;stroke-dasharray:20 27}.display-orb .node{fill:#b8ffff;filter:drop-shadow(0 0 4px #6cffff)}.display-orb .orb-label{position:relative;z-index:3;font-size:clamp(9px,1.5vw,22px);font-weight:800;color:#ddfaff;letter-spacing:-.05em;text-shadow:0 0 8px #6deeff,0 0 18px #126be1}
 .display-orb.spinning{animation:none!important}.display-orb.spinning .orbit-track{transform-origin:100px 100px;animation:orbit-spin 1.65s linear infinite}.display-orb.spinning .orb-svg{filter:drop-shadow(0 0 6px #34ffff) drop-shadow(0 0 19px #187dff)}.display-orb.spinning .inner-halo{fill:#0a2581;animation:core-pulse .85s ease-in-out infinite alternate}
 @keyframes core-pulse{to{fill:#0b43b0;stroke:#bfffff}}@media(max-width:700px){.display-orb .orb-svg{inset:-19%;width:138%;height:138%}}
+
+/* The label is anchored to the actual centre of every touch point. */
+.display-orb .orb-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
