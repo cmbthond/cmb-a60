@@ -98,7 +98,7 @@ function screenOneMarkup(activeOrbs) {
 }
 
 function finalScreenMarkup() {
-  return '<div class="screen final-screen"><img src="images/final.png" alt="Man hinh ket thuc"></div>';
+  return '<div class="screen final-screen"><img src="images/final.jpg" alt="Man hinh ket thuc"></div>';
 }
 function screenMarkup(state, activeOrbs = [], count = 10, showcase = 0) {
   if (state === 1) return screenOneMarkup(activeOrbs);
@@ -157,7 +157,7 @@ openDisplayButton.addEventListener('click', (event) => {
   displayWindow = window.open(displayUrl.toString(), 'cmb-display', 'noopener=false');
   if (!displayWindow) alert('Please allow pop-ups and try again.');
 }, true);
-function startCountdown(){clearInterval(countdownTimer); countdownTimer=setInterval(()=>{if(appState.state!==2){clearInterval(countdownTimer);return}if(appState.count>1){appState.count--;render();if(appState.count===1){clearInterval(countdownTimer);setTimeout(()=>selectState(3),1500)}}},1500)}
+function startCountdown(){clearInterval(countdownTimer); countdownTimer=setInterval(()=>{if(appState.state!==2){clearInterval(countdownTimer);return}if(appState.count>1){appState.count--;render();if(appState.count===1){clearInterval(countdownTimer);setTimeout(()=>selectState(3),1000)}}},1000)}
 function startShowcase(){clearInterval(showcaseTimer);showcaseTimer=setInterval(()=>{if(appState.state!==3){clearInterval(showcaseTimer);return}if(appState.showcase>=3){clearInterval(showcaseTimer);selectState(4);return}appState.showcase++;render()},6000)}
 channel.onmessage = e => { if(e.data?.type === 'request-state') render(false); if(e.data?.type === 'state'){Object.assign(appState,e.data.payload);render(false)} };
 socket?.on('event-state', (nextState) => { Object.assign(appState, nextState); render(false); });
