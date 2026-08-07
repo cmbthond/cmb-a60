@@ -29,21 +29,34 @@
     .full-display{height:100vh;width:100vw;overflow:hidden;background:#031342}
     /* Compensates a source signal stretched to the 10 m × 4 m LED panel, without cropping the supplied background artwork. */
     .full-display .display-orb{transform:scaleX(var(--led-orb-x-scale,1));transform-origin:center}
+    .fullscreen-control{position:fixed;z-index:20;top:0;right:0;width:86px;height:80px;display:grid;place-items:center}.fullscreen-toggle{width:44px;height:44px;border:1px solid rgba(133,240,255,.75);border-radius:10px;background:rgba(3,22,75,.84);color:#effdff;padding:0;font:24px/1 Arial,sans-serif;box-shadow:0 0 18px rgba(33,207,255,.35);backdrop-filter:blur(8px);cursor:pointer;transition:opacity .2s ease,transform .2s ease}.fullscreen-toggle:hover{background:#0c4ba2}.fullscreen-toggle:focus-visible{outline:3px solid #6ff4ff;outline-offset:3px}.fullscreen-control.is-fullscreen .fullscreen-toggle{opacity:0;pointer-events:none;transform:translateY(-8px)}.fullscreen-control.is-fullscreen:not(.awaiting-pointer-exit):hover .fullscreen-toggle,.fullscreen-control.is-fullscreen:not(.awaiting-pointer-exit):focus-within .fullscreen-toggle{opacity:1;pointer-events:auto;transform:none}
   </style>
 </head>
 <body>
   <div id="display" class="full-display"></div>
+  <div id="fullscreenControl" class="fullscreen-control"><button id="toggleFullscreen" class="fullscreen-toggle" type="button" aria-pressed="false" aria-label="Toàn màn hình"><span aria-hidden="true">⛶</span></button></div>
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
   <script src="fireworks.js"></script>
   <script src="socket-client.js"></script>
   <script>
     const c=new BroadcastChannel('cmb-event-control'),d=document.getElementById('display');
+    const fullscreenToggle=document.getElementById('toggleFullscreen'),fullscreenControl=document.getElementById('fullscreenControl');let pointerInsideFullscreenControl=false;
+    function isFullscreen(){return Boolean(document.fullscreenElement||document.webkitFullscreenElement)}
+    function syncFullscreenToggle(){const active=isFullscreen();fullscreenControl.classList.toggle('is-fullscreen',active);fullscreenControl.classList.toggle('awaiting-pointer-exit',active&&pointerInsideFullscreenControl);if(active)fullscreenToggle.blur();fullscreenToggle.querySelector('span').textContent=active?'⤢':'⛶';fullscreenToggle.setAttribute('aria-label',active?'Thoát toàn màn hình':'Toàn màn hình');fullscreenToggle.setAttribute('aria-pressed',String(active))}
+    async function enterFullscreen(){if(isFullscreen())return true;const request=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(!request)return false;try{await request.call(document.documentElement);return true}catch{return false}}
+    function exitFullscreen(){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(exit&&isFullscreen())exit.call(document)}
+    fullscreenControl.addEventListener('pointerenter',()=>{pointerInsideFullscreenControl=true});
+    fullscreenControl.addEventListener('pointerleave',()=>{pointerInsideFullscreenControl=false;fullscreenControl.classList.remove('awaiting-pointer-exit')});
+    fullscreenToggle.addEventListener('click',()=>{if(isFullscreen())exitFullscreen();else enterFullscreen()});
+    document.addEventListener('fullscreenchange',syncFullscreenToggle);document.addEventListener('webkitfullscreenchange',syncFullscreenToggle);
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&isFullscreen())exitFullscreen()});
+    window.setTimeout(()=>{enterFullscreen()},5000);
     const ledAspectRatio=10/4;
     function calibrateLedOrbs(){d.style.setProperty('--led-orb-x-scale',(window.innerWidth/window.innerHeight)/ledAspectRatio)}
     calibrateLedOrbs();window.addEventListener('resize',calibrateLedOrbs);
     const orb=(active)=>`<div class="display-orb ${active?'spinning':''}"><svg class="orb-svg" viewBox="0 0 200 200" aria-hidden="true"><g class="orbit-track"><circle class="outer-glow" cx="100" cy="100" r="84"/><circle class="outer-solid" cx="100" cy="100" r="84"/><circle class="dash-ring" cx="100" cy="100" r="91"/><circle class="arc" cx="100" cy="100" r="76"/><circle class="inner-ring" cx="100" cy="100" r="63"/><circle class="inner-halo" cx="100" cy="100" r="56"/><circle class="node" cx="100" cy="8" r="4"/><circle class="node" cx="192" cy="100" r="4"/><circle class="node" cx="100" cy="192" r="4"/><circle class="node" cx="8" cy="100" r="4"/></g></svg><span class="orb-label">CMB</span></div>`;
     const defaultPoints=[{id:1,x:8,y:84},{id:2,x:20,y:84},{id:3,x:32,y:84},{id:4,x:44,y:84},{id:5,x:56,y:84},{id:6,x:68,y:84},{id:7,x:80,y:84},{id:8,x:92,y:84}];
-    let currentState={state:1,activeOrbs:[],count:10,showcase:0,musicEnabled:true,countdownSoundEnabled:true,touchRowY:62,touchPoints:defaultPoints};
+    let currentState={state:1,activeOrbs:[],count:10,showcase:0,musicEnabled:true,countdownSoundEnabled:true,countdownInterval:1000,touchRowY:62,touchPoints:defaultPoints};
     const backgroundMusic=new Audio('sounds/fuego.mp3');backgroundMusic.loop=true;backgroundMusic.preload='auto';backgroundMusic.volume=.42;
     function syncBackgroundMusic(){const shouldPlay=currentState.state===1&&currentState.musicEnabled!==false;if(shouldPlay){backgroundMusic.play().catch(()=>{});return}backgroundMusic.pause();backgroundMusic.currentTime=0}
     if(new URLSearchParams(window.location.search).get('autoplayMusic')==='1')backgroundMusic.play().catch(()=>{});

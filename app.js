@@ -1,6 +1,7 @@
 const channel = new BroadcastChannel('cmb-event-control');
 const defaultTouchPoints = [{id:1,x:8,y:84},{id:2,x:20,y:84},{id:3,x:32,y:84},{id:4,x:44,y:84},{id:5,x:56,y:84},{id:6,x:68,y:84},{id:7,x:80,y:84},{id:8,x:92,y:84}];
-const appState = { state: 1, activeOrbs: [], count: 10, showcase: 0, musicEnabled: true, countdownSoundEnabled: true, touchRowY: 62, touchPoints: defaultTouchPoints };
+const countdownIntervals = [1000, 800, 500];
+const appState = { state: 1, activeOrbs: [], count: 10, showcase: 0, musicEnabled: true, countdownSoundEnabled: true, countdownInterval: 1000, touchRowY: 62, touchPoints: defaultTouchPoints };
 let displayWindow;
 const socket = window.cmbSocket;
 const openDisplayButton = document.getElementById('openDisplay');
@@ -15,7 +16,8 @@ countdownSoundToggle.className = 'music-btn';
 countdownSoundToggle.title = 'Bat/tat am thanh dem nguoc';
 const headerActions = document.createElement('div');
 headerActions.className = 'header-actions';
-openDisplayButton.parentNode.insertBefore(headerActions, openDisplayButton); headerActions.append(musicToggle, countdownSoundToggle, openDisplayButton);
+const pageHeader = openDisplayButton.parentNode;
+pageHeader.insertBefore(headerActions, openDisplayButton); headerActions.append(musicToggle, countdownSoundToggle, openDisplayButton);
 const orbMarkup = (active, label) => `<div class="display-orb ${active ? 'spinning' : ''}" aria-label="Điểm chạm ${label}"><svg class="orb-svg" viewBox="0 0 200 200" aria-hidden="true"><g class="orbit-track"><circle class="outer-glow" cx="100" cy="100" r="84"/><circle class="outer-solid" cx="100" cy="100" r="84"/><circle class="dash-ring" cx="100" cy="100" r="91"/><circle class="arc" cx="100" cy="100" r="76"/><circle class="inner-ring" cx="100" cy="100" r="63"/><circle class="inner-halo" cx="100" cy="100" r="56"/><circle class="node" cx="100" cy="8" r="4"/><circle class="node" cx="192" cy="100" r="4"/><circle class="node" cx="100" cy="192" r="4"/><circle class="node" cx="8" cy="100" r="4"/></g></svg><span class="orb-label">${label}</span></div>`;
 
 const touchControls = document.getElementById('touchControls');
@@ -44,6 +46,7 @@ if (stateCardsContainer && firstStateCard && interactionPanel) {
 const workspace = document.querySelector('.workspace');
 const stateSection = document.querySelector('.state-section');
 const previewSection = document.querySelector('.preview-section');
+const previewHeading = previewSection?.querySelector('.preview-heading');
 if (workspace && stateSection && previewSection) {
   const twoColumnLayout = document.createElement('div');
   twoColumnLayout.className = 'control-preview-layout';
@@ -53,6 +56,12 @@ if (workspace && stateSection && previewSection) {
   twoColumnLayout.append(controlColumn, previewSection);
   controlColumn.appendChild(stateSection);
 }
+function placeDisplayActions() {
+  if (window.innerWidth > 700 && previewHeading) previewHeading.after(headerActions);
+  else pageHeader.append(headerActions);
+}
+placeDisplayActions();
+window.addEventListener('resize', placeDisplayActions);
 if (stateCardsContainer) {
   const showcaseControls = document.createElement('div');
   showcaseControls.className = 'showcase-controls';
@@ -123,6 +132,7 @@ function markCountdownTen(target) {
   musicToggle.classList.toggle('muted', !appState.musicEnabled);
   countdownSoundToggle.innerHTML = appState.countdownSoundEnabled ? '&#9201; T&#7855;t tick' : '&#128263; B&#7853;t tick';
   countdownSoundToggle.classList.toggle('muted', !appState.countdownSoundEnabled);
+  document.querySelectorAll('[data-countdown-interval]').forEach(button => button.classList.toggle('active', +button.dataset.countdownInterval === appState.countdownInterval));
   document.querySelectorAll('.touch-btn').forEach(el => { const active=appState.activeOrbs.includes(+el.dataset.orb); el.classList.toggle('active',active); el.querySelector('small').textContent=active?'Đang xoay':'Sẵn sàng'; });
   document.querySelectorAll('[data-touch-row-y]').forEach(button => button.classList.toggle('active', +button.dataset.touchRowY === appState.touchRowY));
   channel.postMessage({ type:'state', payload:appState });
@@ -132,6 +142,7 @@ function selectState(state) { clearInterval(countdownTimer); clearInterval(showc
 musicToggle.addEventListener('click', () => { appState.musicEnabled = !appState.musicEnabled; render(); });
 document.querySelectorAll('.state-card').forEach(btn => btn.addEventListener('click', () => selectState(+btn.dataset.state)));
 countdownSoundToggle.addEventListener('click', () => { appState.countdownSoundEnabled = !appState.countdownSoundEnabled; render(); });
+document.querySelector('.countdown-speed-options')?.addEventListener('click', event => { const button = event.target.closest('[data-countdown-interval]'); if (!button) return; const interval = +button.dataset.countdownInterval; if (!countdownIntervals.includes(interval)) return; appState.countdownInterval = interval; render(); if (appState.state === 2) startCountdown(); });
 document.querySelector('.showcase-controls')?.addEventListener('click', e => { const button = e.target.closest('.showcase-thumb'); if (!button) return; clearInterval(countdownTimer); clearInterval(showcaseTimer); appState.state = 3; appState.showcase = +button.dataset.showcase; render(); startShowcase(); });
 touchControls.addEventListener('click', e => { const remove=e.target.closest('[data-remove]'); if(remove){const id=+remove.dataset.remove;appState.touchPoints=appState.touchPoints.filter(point=>point.id!==id);appState.activeOrbs=appState.activeOrbs.filter(pointId=>pointId!==id);render();return}const btn=e.target.closest('.touch-btn'); if(!btn) return; const n=+btn.dataset.orb; appState.activeOrbs=appState.activeOrbs.includes(n)?appState.activeOrbs.filter(x=>x!==n):[...appState.activeOrbs,n]; render(); });
 document.getElementById('resetAll').addEventListener('click', ()=>{appState.activeOrbs=[];render()});
@@ -146,18 +157,21 @@ function enablePointDrag(container) {
   container.addEventListener('pointerup', () => { if(pointId!==null){pointId=null;render()} });
 }
 enablePointDrag(document.getElementById('miniDisplay'));
-document.getElementById('openDisplay').addEventListener('click',()=>{ const displayUrl = new URL('index.html', window.location.href); const socketUrl = new URLSearchParams(window.location.search).get('socket'); if (socketUrl) displayUrl.searchParams.set('socket', socketUrl); displayWindow=window.open(displayUrl.toString(),'cmb-display','noopener=false'); if(!displayWindow) alert('Trình duyệt đang chặn cửa sổ màn hình lớn. Hãy cho phép pop-up và thử lại.'); });
 let countdownTimer, showcaseTimer;
-openDisplayButton.addEventListener('click', (event) => {
-  event.stopImmediatePropagation();
+function openLargeDisplayWindow() {
   const displayUrl = new URL('index.html', window.location.href);
   const socketUrl = new URLSearchParams(window.location.search).get('socket');
   if (socketUrl) displayUrl.searchParams.set('socket', socketUrl);
   if (appState.state === 1 && appState.musicEnabled) displayUrl.searchParams.set('autoplayMusic', '1');
-  displayWindow = window.open(displayUrl.toString(), 'cmb-display', 'noopener=false');
-  if (!displayWindow) alert('Please allow pop-ups and try again.');
-}, true);
-function startCountdown(){clearInterval(countdownTimer); countdownTimer=setInterval(()=>{if(appState.state!==2){clearInterval(countdownTimer);return}if(appState.count>1){appState.count--;render();if(appState.count===1){clearInterval(countdownTimer);setTimeout(()=>selectState(3),1000)}}},1000)}
+  const popupWidth = Math.min(1600, Math.max(960, Math.round(window.screen.availWidth * .8)));
+  const popupHeight = Math.min(900, Math.max(540, Math.round(window.screen.availHeight * .8)));
+  const popupFeatures = 'popup=yes,resizable=yes,scrollbars=no,width=' + popupWidth + ',height=' + popupHeight;
+  displayWindow = window.open(displayUrl.toString(), 'cmb-display', popupFeatures);
+  if (!displayWindow) { alert('Trình duyệt đang chặn cửa sổ màn hình lớn. Hãy cho phép pop-up và thử lại.'); return; }
+  displayWindow.focus();
+}
+openDisplayButton.addEventListener('click', event => { event.preventDefault(); openLargeDisplayWindow(); });
+function startCountdown(){clearInterval(countdownTimer);const interval=appState.countdownInterval;countdownTimer=setInterval(()=>{if(appState.state!==2){clearInterval(countdownTimer);return}if(appState.count>1){appState.count--;render();return}clearInterval(countdownTimer);selectState(3)},interval)}
 function startShowcase(){clearInterval(showcaseTimer);showcaseTimer=setInterval(()=>{if(appState.state!==3){clearInterval(showcaseTimer);return}if(appState.showcase>=3){clearInterval(showcaseTimer);selectState(4);return}appState.showcase++;render()},6000)}
 channel.onmessage = e => { if(e.data?.type === 'request-state') render(false); if(e.data?.type === 'state'){Object.assign(appState,e.data.payload);render(false)} };
 socket?.on('event-state', (nextState) => { Object.assign(appState, nextState); render(false); });
